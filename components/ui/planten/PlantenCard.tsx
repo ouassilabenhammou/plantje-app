@@ -4,19 +4,19 @@ import { Image, StyleSheet, Text, View } from "react-native";
 
 type PlantenCardProps = {
   image?: string;
-  naam?: string;
-  latijnseNaam?: string;
+  name?: string;
+  species?: string;
   label?: string;
 };
 
-const PlantenCard = ({ image, naam, latijnseNaam }: PlantenCardProps) => {
+const PlantenCard = ({ image, name, species }: PlantenCardProps) => {
   return (
     <View style={styles.plantcard}>
       <Image source={{ uri: image }} style={styles.image} />
 
       <View style={styles.tekstBlok}>
-        <Text style={styles.naam}>{naam ?? "Onbekende plant"}</Text>
-        <Text style={styles.latijn}>{latijnseNaam ?? "-"}</Text>
+        <Text style={styles.naam}>{name ?? "Onbekende plant"}</Text>
+        <Text style={styles.latijn}>{species ?? "-"}</Text>
       </View>
       <ChevronIcon style={styles.icon} />
     </View>

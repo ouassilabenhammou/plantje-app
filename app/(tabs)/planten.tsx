@@ -1,3 +1,4 @@
+import PlantenCard from "@/components/ui/planten/PlantenCard";
 import { supabase } from "@/lib/supabase/supabase";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -62,15 +63,11 @@ export default function PlantenScreen() {
         ) : (
           <View>
             {plants.map((plants) => (
-              <Text>{plants.name}</Text>
-            ))}
-
-            {plants.map((plants) => (
-              <Text>{plants.species}</Text>
-            ))}
-
-            {plants.map((plants) => (
-              <Text>{plants.location}</Text>
+              <PlantenCard
+                key={plants.id}
+                name={plants.name}
+                species={plants.species}
+              />
             ))}
           </View>
         )}
