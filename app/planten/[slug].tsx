@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 
 import type { Plant } from "@/lib/planten/plant";
-import { getPlantBySlug } from "@/lib/planten/plant";
+import { deletePlant, getPlantBySlug } from "@/lib/planten/plant";
 
 export default function PlantDetail() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
@@ -22,6 +22,18 @@ export default function PlantDetail() {
     })();
   }, [slug]);
 
+  async function handleDelete() {
+    if (!plant) return;
+
+    try {
+      await deletePlant(plant.id);
+      Alert.alert("Verwijderd", "De plant is verwijderd.");
+      router.replace("/planten");
+    } catch (e) {
+      Alert.alert("Error", String(e));
+    }
+  }
+
   function openMenu() {
     if (!plant) return;
 
@@ -30,6 +42,24 @@ export default function PlantDetail() {
       {
         text: "Bewerken",
         onPress: () => router.push(`/planten/bewerken?slug=${plant.slug}`),
+      },
+      {
+        text: "Verwijderen",
+        style: "destructive",
+        onPress: () => {
+          Alert.alert(
+            "Verwijderen",
+            "Weet je zeker dat je deze plant wilt verwijderen?",
+            [
+              { text: "Annuleren", style: "cancel" },
+              {
+                text: "Verwijderen",
+                style: "destructive",
+                onPress: handleDelete,
+              },
+            ]
+          );
+        },
       },
     ]);
   }

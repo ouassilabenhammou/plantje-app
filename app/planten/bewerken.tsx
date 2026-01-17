@@ -77,7 +77,7 @@ export default function BewerkPlantForm() {
       await updatePlant(plant.id, formData);
 
       Alert.alert("Success", "Plant is bijgewerkt!");
-      // terug naar detail van (mogelijk) nieuwe slug
+
       router.replace(`/planten/${slug}`);
     } catch (e: unknown) {
       Alert.alert("Error", getErrorMessage(e));

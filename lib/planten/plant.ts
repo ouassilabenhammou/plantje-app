@@ -103,6 +103,7 @@ export async function getPlant(id: string): Promise<Plant | null> {
 
   return data as Plant;
 }
+
 // GET ONE BY SLUG
 export async function getPlantBySlug(slug: string) {
   const { data, error } = await supabase
@@ -117,4 +118,14 @@ export async function getPlantBySlug(slug: string) {
   }
 
   return data;
+}
+
+// DELETE
+export async function deletePlant(id: string) {
+  const { error } = await supabase.from("plants").delete().eq("id", id);
+
+  if (error) {
+    console.error("Delete error:", error);
+    throw new Error(`Failed to delete plant: ${error.message}`);
+  }
 }
