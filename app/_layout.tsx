@@ -3,6 +3,9 @@ import "react-native-reanimated";
 import { Stack } from "expo-router";
 import { PaperProvider } from "react-native-paper";
 
+import { StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 export const unstable_settings = {
   anchor: "(tabs)",
 };
@@ -10,7 +13,16 @@ export const unstable_settings = {
 export default function RootLayout() {
   return (
     <PaperProvider>
-      <Stack screenOptions={{ headerShown: false }} />
+      <SafeAreaView style={styles.safe}>
+        <Stack screenOptions={{ headerShown: false }} />
+      </SafeAreaView>
     </PaperProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+    paddingTop: 24,
+  },
+});

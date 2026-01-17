@@ -1,29 +1,24 @@
-import { getSpeciesList } from "@/lib/api/perenual";
+// import { getSpeciesList } from "@/lib/api/perenual";
 import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
-import { useEffect, useState } from "react";
+// // Types
 
-import PlantenCard from "@/components/ui/planten/PlantenCard";
-import TakenCard from "@/components/ui/planten/TakenCard";
+// type Plant = {
+//   id: number;
+//   common_name: string;
+//   scientific_name: string[];
+//   default_image?: {
+//     regular_url?: string;
+//     medium_url?: string;
+//     small_url?: string;
+//     thumbnail?: string;
+//   };
+// };
 
-// Types
-
-type Plant = {
-  id: number;
-  common_name: string;
-  scientific_name: string[];
-  default_image?: {
-    regular_url?: string;
-    medium_url?: string;
-    small_url?: string;
-    thumbnail?: string;
-  };
-};
-
-type PlantResponse = {
-  data: Plant[];
-};
+// type PlantResponse = {
+//   data: Plant[];
+// };
 
 // Begroeting
 
@@ -41,28 +36,28 @@ function getBegroeting(): Begroeting {
 
 export default function HomeScreen() {
   const begroeting = getBegroeting();
-  const [plants, setPlants] = useState<PlantResponse | null>(null);
-  useEffect(() => {
-    const load = async () => {
-      const data = await getSpeciesList();
-      setPlants(data);
-    };
+  // const [plants, setPlants] = useState<PlantResponse | null>(null);
+  // useEffect(() => {
+  //   const load = async () => {
+  //     // const data = await getSpeciesList();
+  //     setPlants(data);
+  //   };
 
-    load();
-  }, []);
+  //   load();
+  // }, []);
 
   return (
     <View style={styles.container}>
       <Text>{begroeting}</Text>
       <View style={styles.takenContainer}>
-        {plants?.data.slice(0, 2).map((plant) => (
+        {/* {plants?.data.slice(0, 2).map((plant) => (
           <TakenCard
             key={plant.id}
             naam={plant.common_name}
             latijnseNaam={plant.scientific_name?.[0]}
             image={plant.default_image?.regular_url}
           />
-        ))}
+        ))} */}
       </View>
 
       <View style={styles.plantenContainer}>
@@ -70,7 +65,7 @@ export default function HomeScreen() {
           <Text>Mijn planten</Text>
           <Link href="/planten">Bekijk</Link>
         </View>
-
+        {/* 
         {plants?.data.slice(0, 3).map((plant) => (
           <PlantenCard
             key={plant.id}
@@ -78,7 +73,7 @@ export default function HomeScreen() {
             latijnseNaam={plant.scientific_name?.[0]}
             image={plant.default_image?.regular_url}
           />
-        ))}
+        ))} */}
       </View>
     </View>
   );

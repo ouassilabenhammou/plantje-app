@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase/supabase";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 
-import { ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 
 type PlantForm = {
   id: string;
@@ -63,12 +63,21 @@ export default function PlantenScreen() {
         ) : (
           <View>
             {plants.map((plants) => (
-              <PlantenCard
+              <Pressable
+                onPress={() => router.push(`/planten/${plants.slug}`)}
                 key={plants.id}
-                name={plants.name}
-                species={plants.species}
-              />
+              >
+                <PlantenCard
+                  key={plants.id}
+                  name={plants.name}
+                  species={plants.species}
+                />
+              </Pressable>
             ))}
+
+            <Pressable onPress={() => router.push(`/planten/nieuw`)}>
+              <Text>+ Plant toevoegen</Text>
+            </Pressable>
           </View>
         )}
       </View>
