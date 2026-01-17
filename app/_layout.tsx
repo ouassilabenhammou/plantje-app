@@ -14,7 +14,7 @@ export default function RootLayout() {
   return (
     <PaperProvider>
       <SafeAreaView style={styles.safe}>
-        <Stack screenOptions={{ headerShown: false }} />
+        <Stack />
       </SafeAreaView>
     </PaperProvider>
   );

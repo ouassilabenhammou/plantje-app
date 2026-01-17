@@ -1,13 +1,92 @@
-import { useLocalSearchParams } from "expo-router";
-import React from "react";
-import { Text, View } from "react-native";
+import { router, Stack, useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+
+import type { Plant } from "@/lib/planten/plant";
+import { getPlantBySlug } from "@/lib/planten/plant";
 
 export default function PlantDetail() {
-  const { slug } = useLocalSearchParams();
+  const { slug } = useLocalSearchParams<{ slug: string }>();
+  const [plant, setPlant] = useState<Plant | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      if (!slug) return;
+      const data = await getPlantBySlug(String(slug));
+      if (!data) {
+        Alert.alert("Niet gevonden", "Deze plant bestaat niet.");
+        router.back();
+        return;
+      }
+      setPlant(data);
+    })();
+  }, [slug]);
+
+  function openMenu() {
+    if (!plant) return;
+
+    Alert.alert("Opties", "Wat wil je doen?", [
+      { text: "Annuleren", style: "cancel" },
+      {
+        text: "Bewerken",
+        onPress: () => router.push(`/planten/bewerken?slug=${plant.slug}`),
+      },
+    ]);
+  }
 
   return (
-    <View>
-      <Text>{slug}</Text>
-    </View>
+    <>
+      <Stack.Screen
+        options={{
+          title: "Plant",
+          headerRight: () => (
+            <Pressable onPress={openMenu} style={styles.menuBtn}>
+              <Text style={styles.menuDots}>⋯</Text>
+            </Pressable>
+          ),
+        }}
+      />
+
+      <View style={styles.card}>
+        <View style={styles.field}>
+          <Text style={styles.label}>Naam</Text>
+          <Text style={styles.value}>{plant?.name ?? "-"}</Text>
+        </View>
+
+        <View style={styles.field}>
+          <Text style={styles.label}>Slug</Text>
+          <Text style={styles.slug}>{String(slug)}</Text>
+        </View>
+
+        <View style={styles.field}>
+          <Text style={styles.label}>Soort</Text>
+          <Text style={styles.value}>{plant?.species ?? "-"}</Text>
+        </View>
+
+        <View style={styles.field}>
+          <Text style={styles.label}>Locatie</Text>
+          <Text style={styles.value}>{plant?.location ?? "-"}</Text>
+        </View>
+      </View>
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  menuBtn: { paddingHorizontal: 12, paddingVertical: 6 },
+  menuDots: { color: "#e4e4e7", fontSize: 26, fontWeight: "900" },
+
+  card: {
+    backgroundColor: "#111827",
+    borderRadius: 14,
+    padding: 16,
+    gap: 14,
+    borderWidth: 1,
+    borderColor: "#27272a",
+    margin: 16,
+  },
+  field: { gap: 8 },
+  label: { fontSize: 13, fontWeight: "700", color: "#e4e4e7" },
+  slug: { fontSize: 12, color: "#93c5fd", marginTop: 2 },
+  value: { color: "#fafafa", fontSize: 14 },
+});

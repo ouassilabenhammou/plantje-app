@@ -53,3 +53,68 @@ export async function createPlants(formData: FormData) {
     throw new Error(`Failed to create plant: ${error.message}`);
   }
 }
+
+// UPDATE
+
+export async function updatePlant(
+  id: string,
+  formData: FormData
+): Promise<Plant> {
+  const name = (formData.get("name") ?? "").toString().trim();
+  const slug = (formData.get("slug") ?? "").toString().trim();
+  const species = (formData.get("species") ?? "").toString().trim();
+  const location = (formData.get("location") ?? "").toString().trim();
+
+  if (!name) throw new Error("Name is required");
+  if (!slug) throw new Error("Slug is required");
+
+  const { data, error } = await supabase
+    .from("plants")
+    .update({
+      name,
+      slug,
+      species: species || null,
+      location: location || null,
+    })
+    .eq("id", id)
+    .select("*")
+    .single();
+
+  if (error) {
+    console.error("Update error:", error);
+    throw new Error(`Failed to update plant: ${error.message}`);
+  }
+
+  return data as Plant;
+}
+
+// GET ONE (needed for edit form)
+export async function getPlant(id: string): Promise<Plant | null> {
+  const { data, error } = await supabase
+    .from("plants")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("Fetch error:", error);
+    return null;
+  }
+
+  return data as Plant;
+}
+// GET ONE BY SLUG
+export async function getPlantBySlug(slug: string) {
+  const { data, error } = await supabase
+    .from("plants")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error) {
+    console.error("Fetch by slug error:", error);
+    return null;
+  }
+
+  return data;
+}
