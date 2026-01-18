@@ -4,14 +4,20 @@ import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 
 import type { Plant } from "@/lib/planten/plant";
 import { deletePlant, getPlantBySlug } from "@/lib/planten/plant";
+import { supabase } from "@/lib/supabase/supabase";
+
+type CareFrequentieNL = "dagelijks" | "wekelijks" | "maandelijks";
 
 export default function PlantDetail() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const [plant, setPlant] = useState<Plant | null>(null);
 
+  const [frequentie, setFrequentie] = useState<CareFrequentieNL | null>(null);
+
   useEffect(() => {
     (async () => {
       if (!slug) return;
+
       const data = await getPlantBySlug(String(slug));
       if (!data) {
         Alert.alert("Niet gevonden", "Deze plant bestaat niet.");
@@ -19,6 +25,30 @@ export default function PlantDetail() {
         return;
       }
       setPlant(data);
+
+      const { data: auth } = await supabase.auth.getUser();
+      const user = auth.user;
+      if (!user) return;
+
+      const { data: userPlant, error } = await supabase
+        .from("user_plants")
+        .select("frequency")
+        .eq("user_id", user.id)
+        .eq("plant_id", data.id)
+        .single();
+
+      if (error) return;
+
+      if (userPlant?.frequency) {
+        const nl =
+          userPlant.frequency === "daily"
+            ? "dagelijks"
+            : userPlant.frequency === "weekly"
+            ? "wekelijks"
+            : "maandelijks";
+
+        setFrequentie(nl);
+      }
     })();
   }, [slug]);
 
@@ -96,6 +126,11 @@ export default function PlantDetail() {
         <View style={styles.field}>
           <Text style={styles.label}>Locatie</Text>
           <Text style={styles.value}>{plant?.location ?? "-"}</Text>
+        </View>
+
+        <View style={styles.field}>
+          <Text style={styles.label}>Verzorging</Text>
+          <Text style={styles.value}>{`${frequentie}`}</Text>
         </View>
       </View>
     </>

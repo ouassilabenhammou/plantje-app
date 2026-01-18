@@ -12,7 +12,14 @@ type PlantenCardProps = {
 const PlantenCard = ({ image, name, species }: PlantenCardProps) => {
   return (
     <View style={styles.plantcard}>
-      <Image source={{ uri: image }} style={styles.image} />
+      <Image
+        source={
+          image
+            ? { uri: image }
+            : { uri: "https://via.placeholder.com/70x70.png?text=Plant" }
+        }
+        style={styles.image}
+      />
 
       <View style={styles.tekstBlok}>
         <Text style={styles.naam}>{name ?? "Onbekende plant"}</Text>

@@ -12,6 +12,9 @@ import {
 
 import type { Plant } from "@/lib/planten/plant";
 import { getPlantBySlug, updatePlant } from "@/lib/planten/plant";
+import { supabase } from "@/lib/supabase/supabase";
+
+type CareFrequentie = "dagelijks" | "wekelijks" | "maandelijks";
 
 function slugify(input: string): string {
   return input
@@ -38,6 +41,8 @@ export default function BewerkPlantForm() {
   const [location, setLocation] = useState<string>("");
   const [submitting, setSubmitting] = useState<boolean>(false);
 
+  const [frequentie, setFrequentie] = useState<CareFrequentie>("wekelijks");
+
   const slug = useMemo(() => slugify(name), [name]);
 
   useEffect(() => {
@@ -55,6 +60,29 @@ export default function BewerkPlantForm() {
       setName(data.name ?? "");
       setSpecies(data.species ?? "");
       setLocation(data.location ?? "");
+
+      // huidige frequentie ophalen
+      const { data: auth } = await supabase.auth.getUser();
+      const user = auth.user;
+      if (!user) return;
+
+      const { data: userPlant } = await supabase
+        .from("user_plants")
+        .select("frequency")
+        .eq("user_id", user.id)
+        .eq("plant_id", data.id)
+        .single();
+
+      if (userPlant?.frequency) {
+        const nl =
+          userPlant.frequency === "daily"
+            ? "dagelijks"
+            : userPlant.frequency === "weekly"
+            ? "wekelijks"
+            : "maandelijks";
+
+        setFrequentie(nl);
+      }
     })();
   }, [routeSlug]);
 
@@ -68,6 +96,13 @@ export default function BewerkPlantForm() {
     try {
       setSubmitting(true);
 
+      const { data: auth } = await supabase.auth.getUser();
+      const user = auth.user;
+      if (!user) {
+        Alert.alert("Niet ingelogd", "Log in om te bewerken.");
+        return;
+      }
+
       const formData = new FormData();
       formData.append("name", name.trim());
       formData.append("slug", slug);
@@ -76,8 +111,21 @@ export default function BewerkPlantForm() {
 
       await updatePlant(plant.id, formData);
 
-      Alert.alert("Success", "Plant is bijgewerkt!");
+      // frequentie updaten
+      const frequencyDb =
+        frequentie === "dagelijks"
+          ? "daily"
+          : frequentie === "wekelijks"
+          ? "weekly"
+          : "monthly";
 
+      await supabase
+        .from("user_plants")
+        .update({ frequency: frequencyDb })
+        .eq("user_id", user.id)
+        .eq("plant_id", plant.id);
+
+      Alert.alert("Success", "Plant is bijgewerkt!");
       router.replace(`/planten/${slug}`);
     } catch (e: unknown) {
       Alert.alert("Error", getErrorMessage(e));
@@ -134,6 +182,44 @@ export default function BewerkPlantForm() {
             />
           </View>
 
+          {/* verzorging */}
+          <View style={styles.field}>
+            <Text style={styles.label}>Verzorging</Text>
+
+            <View style={styles.freqRow}>
+              {(
+                ["dagelijks", "wekelijks", "maandelijks"] as CareFrequentie[]
+              ).map((f) => {
+                const active = frequentie === f;
+                return (
+                  <Pressable
+                    key={f}
+                    onPress={() => setFrequentie(f)}
+                    style={({ pressed }) => [
+                      styles.freqBtn,
+                      active && styles.freqBtnActive,
+                      pressed && styles.pressed,
+                    ]}
+                  >
+                    <Text
+                      style={[styles.freqText, active && styles.freqTextActive]}
+                    >
+                      {f === "dagelijks"
+                        ? "Dagelijks"
+                        : f === "wekelijks"
+                        ? "Wekelijks"
+                        : "Maandelijks"}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+
+            <Text style={styles.help}>
+              Pas aan hoe vaak je deze plant verzorgt.
+            </Text>
+          </View>
+
           <View style={styles.actions}>
             <Pressable
               onPress={onSubmit}
@@ -188,10 +274,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 14,
   },
-  textareaSm: { minHeight: 90 },
-  textareaLg: { minHeight: 180 },
-  row: { flexDirection: "row", alignItems: "center", gap: 10, paddingTop: 2 },
-  rowLabel: { fontSize: 14, color: "#e4e4e7" },
   actions: { flexDirection: "row", gap: 10, paddingTop: 8 },
   primaryBtn: {
     flex: 1,
@@ -213,4 +295,18 @@ const styles = StyleSheet.create({
   secondaryBtnText: { color: "#e4e4e7", fontWeight: "800", fontSize: 14 },
   pressed: { opacity: 0.9 },
   disabled: { opacity: 0.6 },
+
+  freqRow: { flexDirection: "row", gap: 10 },
+  freqBtn: {
+    flex: 1,
+    backgroundColor: "#0f172a",
+    borderRadius: 12,
+    paddingVertical: 10,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#3f3f46",
+  },
+  freqBtnActive: { borderColor: "#2563eb" },
+  freqText: { color: "#e4e4e7", fontWeight: "800", fontSize: 13 },
+  freqTextActive: { color: "#93c5fd" },
 });
