@@ -14,6 +14,7 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
+        headerShown: false, // ✅ BELANGRIJK: anders krijg je dubbele headers
         tabBarActiveTintColor: colors.primaryGroen,
         tabBarInactiveTintColor: colors.tabInactive,
         tabBarStyle: styles.tabBar,
@@ -65,15 +66,13 @@ export default function TabsLayout() {
         options={{
           title: "Instellingen",
           tabBarIcon: ({ color }) => (
-            <InstellingenIcon width={24} height={22} color={color} />
+            <InstellingenIcon width={22} height={22} color={color} />
           ),
         }}
       />
     </Tabs>
   );
 }
-
-// Styles
 
 const styles = StyleSheet.create({
   tabBar: {

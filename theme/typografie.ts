@@ -30,11 +30,11 @@ export type Typography = {
 export const typography: Typography = {
   pageTitle: {
     fontSize: 25,
-    fontFamily: fonts.semiBold,
+    fontFamily: fonts.bold,
   },
   sectionTitle: {
     fontSize: 19,
-    fontFamily: fonts.medium,
+    fontFamily: fonts.semiBold,
   },
   body: {
     fontSize: 16,
