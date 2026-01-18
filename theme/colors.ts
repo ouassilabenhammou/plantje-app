@@ -13,6 +13,8 @@ export type ColorTheme = {
 
   textPrimary: string;
   textSecondary: string;
+
+  tabInactive: string;
 };
 
 export const colors: ColorTheme = {
@@ -30,4 +32,6 @@ export const colors: ColorTheme = {
 
   textPrimary: "#2F5D50",
   textSecondary: "rgba(47,93,80,0.7)",
+
+  tabInactive: "rgba(47,93,80,0.4)",
 };
