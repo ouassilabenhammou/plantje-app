@@ -5,6 +5,13 @@ import { Link, useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
+import CheckIcon from "@/assets/icons/check-icon.svg";
+
+import { colors } from "@/theme/colors";
+import { typography } from "@/theme/typografie";
+
+// Types
+
 type PlantForm = {
   id: string;
   slug: string;
@@ -26,13 +33,14 @@ type TaakItem = {
 };
 
 // Begroeting
-type Begroeting = "Goedemorgen" | "Goedemiddag" | "Goedenavond";
+
+type Begroeting = "Goedemorgen," | "Goedemiddag," | "Goedenavond,";
 
 function getBegroeting(): Begroeting {
   const hour = new Date().getHours();
-  if (hour >= 5 && hour < 12) return "Goedemorgen";
-  if (hour >= 12 && hour < 18) return "Goedemiddag";
-  return "Goedenavond";
+  if (hour >= 5 && hour < 12) return "Goedemorgen,";
+  if (hour >= 12 && hour < 18) return "Goedemiddag,";
+  return "Goedenavond,";
 }
 
 export default function HomeScreen() {
@@ -172,91 +180,161 @@ export default function HomeScreen() {
   );
 
   return (
-    <View style={styles.container}>
-      <Text>{begroeting}</Text>
+    <>
+      <View style={styles.container}>
+        {/* Begroeting */}
+        <View style={styles.begroeting}>
+          <Text style={styles.begroetingTekst}>{begroeting}</Text>
 
-      {/* Taken */}
-      <View style={styles.takenContainer}>
-        <Text style={styles.takenTitel}>Taken vandaag</Text>
-
-        {takenLoading ? (
-          <Text>Loading...</Text>
-        ) : taken.length === 0 ? (
-          <Text>Geen taken voor vandaag 🎉</Text>
-        ) : (
-          taken.map((t) => (
-            <TakenCard
-              key={t.task_id}
-              taskId={t.task_id}
-              userPlantId={t.user_plant_id}
-              dueAt={t.due_at}
-              naam={t.plant_name}
-              latijnseNaam={t.plant_species}
-              image={t.plant_image_url ?? undefined}
-              onDone={() => removeFromUI(t.task_id)}
-            />
-          ))
-        )}
-      </View>
-
-      {/* Mijn planten */}
-      <View style={styles.plantenContainer}>
-        <View style={styles.tekstLink}>
-          <Text>Mijn planten</Text>
-          <Link href="/planten">Bekijk</Link>
+          {takenLoading ? null : taken.length === 0 ? (
+            <Text style={styles.subTekst}>
+              Goed bezig! Al je planten zijn verzorgd.{" "}
+            </Text>
+          ) : (
+            <Text style={styles.subTekst}>
+              Je hebt {taken.length} {taken.length === 1 ? "plant" : "planten"}{" "}
+              te verzorgen vandaag
+            </Text>
+          )}
         </View>
 
-        {loading ? (
-          <Text>Loading...</Text>
-        ) : !plants || plants.length === 0 ? (
-          <Text>Nog geen planten toegevoegd</Text>
-        ) : (
-          <View>
-            {plants.map((plant) => (
-              <Pressable
-                key={plant.id}
-                onPress={() => router.push(`/planten/${plant.slug}`)}
-              >
-                <PlantenCard name={plant.name} species={plant.species} />
-              </Pressable>
-            ))}
-          </View>
-        )}
+        {/* Taken */}
+        <View style={styles.takenContainer}>
+          {takenLoading ? null : taken.length === 0 ? (
+            <View style={styles.centerTekst}>
+              <View style={styles.checkBox}>
+                <CheckIcon width={20} height={20} color={colors.primaryBg} />
+              </View>
 
-        <Pressable
-          onPress={() => router.push("/planten/nieuw")}
-          style={styles.addBtn}
-        >
-          <Text style={styles.addText}>+ Plant toevoegen</Text>
-        </Pressable>
+              <Text style={styles.takenTitel}>Alles is bijgewerkt</Text>
+              <Text style={styles.takenSub}>
+                Vandaag hebben je planten geen verzorging nodig
+              </Text>
+            </View>
+          ) : (
+            taken.map((t) => (
+              <TakenCard
+                key={t.task_id}
+                taskId={t.task_id}
+                userPlantId={t.user_plant_id}
+                dueAt={t.due_at}
+                naam={t.plant_name}
+                latijnseNaam={t.plant_species}
+                image={t.plant_image_url ?? undefined}
+                onDone={() => removeFromUI(t.task_id)}
+              />
+            ))
+          )}
+        </View>
+
+        {/* Mijn planten */}
+        <View style={styles.plantenContainer}>
+          <View style={styles.tekstLink}>
+            <Text style={styles.sectieTitel}>Mijn planten</Text>
+            <Link href="/planten" style={styles.bekijkLink}>
+              Bekijk
+            </Link>
+          </View>
+
+          {loading ? (
+            <Text>Loading...</Text>
+          ) : !plants || plants.length === 0 ? (
+            <Text>Nog geen planten toegevoegd</Text>
+          ) : (
+            <View style={styles.plantenCard}>
+              {plants.map((plant) => (
+                <Pressable
+                  key={plant.id}
+                  onPress={() => router.push(`/planten/${plant.slug}`)}
+                >
+                  <PlantenCard name={plant.name} species={plant.species} />
+                </Pressable>
+              ))}
+            </View>
+          )}
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 
 // Styles
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    gap: 10,
+    gap: 40,
+    backgroundColor: colors.primaryBg,
   },
+
+  // Begroeting
+  begroeting: {
+    gap: 5,
+  },
+
+  begroetingTekst: {
+    color: colors.textPrimary,
+    ...typography.pageTitle,
+  },
+
+  subTekst: {
+    ...typography.body,
+    color: colors.textPrimary,
+  },
+
+  // Taken Container
 
   takenContainer: {
     width: "100%",
-    padding: 16,
-    backgroundColor: "grey",
+    padding: 30,
+    backgroundColor: colors.sectieBg,
     borderRadius: 10,
     gap: 10,
     justifyContent: "center",
-    marginBottom: 30,
+    alignItems: "center",
+  },
+
+  centerTekst: {
+    textAlign: "center",
+    alignItems: "center",
+    gap: 8,
+  },
+
+  checkBox: {
+    width: 30,
+    height: 30,
+    backgroundColor: colors.primaryGroen,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   takenTitel: {
-    fontWeight: "800",
+    textAlign: "center",
+    ...typography.sectionTitle,
+    color: colors.textPrimary,
   },
 
+  takenSub: {
+    textAlign: "center",
+    width: 200,
+    ...typography.body,
+    color: colors.textPrimary,
+  },
+
+  // Mijn planten
+
   plantenContainer: {
+    gap: 20,
+  },
+
+  sectieTitel: {
+    ...typography.sectionTitle,
+    color: colors.textPrimary,
+  },
+
+  plantenCard: {
     gap: 10,
   },
 
@@ -267,16 +345,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  addBtn: {
-    marginTop: 10,
-    padding: 12,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#3f3f46",
-    alignItems: "center",
-  },
-
-  addText: {
-    fontWeight: "700",
+  bekijkLink: {
+    color: colors.primaryGroen,
+    ...typography.body,
   },
 });

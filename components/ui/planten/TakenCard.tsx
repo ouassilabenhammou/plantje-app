@@ -1,7 +1,11 @@
 import CheckIcon from "@/assets/icons/check-icon.svg";
 import { supabase } from "@/lib/supabase/supabase";
+
 import React from "react";
 import { Alert, Image, Pressable, StyleSheet, Text, View } from "react-native";
+
+import { colors } from "@/theme/colors";
+import { typography } from "@/theme/typografie";
 
 type TakenCardProps = {
   image?: string;
@@ -137,7 +141,7 @@ const TakenCard = ({
           ]}
         >
           {(checked || saving) && (
-            <CheckIcon width={16} height={16} color="grey" />
+            <CheckIcon width={16} height={16} color="white" />
           )}
         </Pressable>
       </View>
@@ -157,6 +161,11 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     paddingVertical: 5,
     flexDirection: "row",
+
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
   },
 
   image: {
@@ -167,11 +176,13 @@ const styles = StyleSheet.create({
   },
 
   naam: {
-    fontSize: 14,
+    ...typography.cardTitel,
+    color: colors.textPrimary,
   },
 
   latijn: {
-    fontSize: 12,
+    ...typography.subText,
+    color: colors.textSecondary,
   },
 
   tekstBlok: {
@@ -184,13 +195,13 @@ const styles = StyleSheet.create({
     height: 26,
     borderRadius: 13,
     borderWidth: 2,
-    borderColor: "#9E9E9E",
+    borderColor: colors.primaryGroen,
     alignItems: "center",
     justifyContent: "center",
   },
 
   cirkelChecked: {
-    borderColor: "black",
+    backgroundColor: colors.primaryGroen,
   },
 
   checkBox: {

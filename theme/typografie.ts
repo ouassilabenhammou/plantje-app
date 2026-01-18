@@ -13,6 +13,10 @@ export type Typography = {
     fontSize: number;
     fontFamily: string;
   };
+  cardTitel: {
+    fontSize: number;
+    fontFamily: string;
+  };
   subText: {
     fontSize: number;
     fontFamily: string;
@@ -39,6 +43,10 @@ export const typography: Typography = {
   body: {
     fontSize: 16,
     fontFamily: fonts.regular,
+  },
+  cardTitel: {
+    fontSize: 16,
+    fontFamily: fonts.medium,
   },
   subText: {
     fontSize: 14,

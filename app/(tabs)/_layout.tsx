@@ -14,7 +14,8 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false, // ✅ BELANGRIJK: anders krijg je dubbele headers
+        headerShown: false,
+
         tabBarActiveTintColor: colors.primaryGroen,
         tabBarInactiveTintColor: colors.tabInactive,
         tabBarStyle: styles.tabBar,
@@ -94,6 +95,6 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    bottom: 16,
+    bottom: 24,
   },
 });

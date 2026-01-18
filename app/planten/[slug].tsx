@@ -98,7 +98,9 @@ export default function PlantDetail() {
     <>
       <Stack.Screen
         options={{
-          title: "Plant",
+          title: "",
+          headerBackTitle: "ga terug",
+
           headerRight: () => (
             <Pressable onPress={openMenu} style={styles.menuBtn}>
               <Text style={styles.menuDots}>⋯</Text>

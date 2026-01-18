@@ -3,7 +3,9 @@ import TakenCard from "@/components/ui/planten/TakenCard";
 import { supabase } from "@/lib/supabase/supabase";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useRef, useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+
+import { colors } from "@/theme/colors";
 
 type PlantForm = {
   id: string;
@@ -53,7 +55,6 @@ export default function PlantenScreen() {
 
   const loadPlants = useCallback(async () => {
     const now = Date.now();
-    // Alleen herladen als data nog niet geladen is, of als het meer dan 30 seconden geleden is
     if (hasLoadedRef.current && now - lastLoadTimeRef.current < 30000) {
       return;
     }
@@ -82,7 +83,6 @@ export default function PlantenScreen() {
 
   const loadTaken = useCallback(async () => {
     const now = Date.now();
-    // Alleen herladen als data nog niet geladen is, of als het meer dan 30 seconden geleden is
     if (
       hasTakenLoadedRef.current &&
       now - lastTakenLoadTimeRef.current < 30000
@@ -168,18 +168,22 @@ export default function PlantenScreen() {
   );
 
   return (
-    <ScrollView>
-      <Text>Mijn planten</Text>
+    <ScrollView
+      style={styles.screen} // ✅ achtergrond van het hele scherm
+      contentContainerStyle={styles.content} // ✅ padding + groeit netjes
+    >
+      <Text style={styles.title}>Mijn planten</Text>
 
       {/* Taken vandaag */}
-      <View>
-        <Text>Taken vandaag</Text>
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Taken vandaag</Text>
+
         {takenLoading ? (
-          <Text>Loading...</Text>
+          <Text style={styles.textMuted}>Loading...</Text>
         ) : taken.length === 0 ? (
-          <Text>Geen taken voor vandaag 🎉</Text>
+          <Text style={styles.textMuted}>Geen taken voor vandaag 🎉</Text>
         ) : (
-          <View>
+          <View style={styles.list}>
             {taken.map((t) => (
               <TakenCard
                 key={t.task_id}
@@ -197,15 +201,15 @@ export default function PlantenScreen() {
       </View>
 
       {/* Planten lijst */}
-      <View>
+      <View style={styles.section}>
         {loading ? (
-          <Text>Loading...</Text>
+          <Text style={styles.textMuted}>Loading...</Text>
         ) : errorMsg ? (
-          <Text>{errorMsg}</Text>
+          <Text style={styles.textMuted}>{errorMsg}</Text>
         ) : !plants || plants.length === 0 ? (
-          <Text>Nog geen planten toegevoegd</Text>
+          <Text style={styles.textMuted}>Nog geen planten toegevoegd</Text>
         ) : (
-          <View>
+          <View style={styles.list}>
             {plants.map((plant) => (
               <Pressable
                 onPress={() => router.push(`/planten/${plant.slug}`)}
@@ -218,9 +222,52 @@ export default function PlantenScreen() {
         )}
 
         <Pressable onPress={() => router.push(`/planten/nieuw`)}>
-          <Text>+ Plant toevoegen</Text>
+          <Text style={styles.addText}>+ Plant toevoegen</Text>
         </Pressable>
       </View>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  // ✅ hele scherm dezelfde achtergrond
+  screen: {
+    flex: 1,
+    backgroundColor: colors.primaryBg,
+  },
+
+  // ✅ padding en zorgt dat het niet “klein” wordt
+  content: {
+    padding: 16,
+    gap: 16,
+  },
+
+  title: {
+    color: colors.textPrimary,
+    fontSize: 18,
+    fontWeight: "700",
+  },
+
+  section: {
+    gap: 10,
+  },
+
+  sectionTitle: {
+    color: colors.textPrimary,
+    fontSize: 14,
+    fontWeight: "700",
+  },
+
+  list: {
+    gap: 10,
+  },
+
+  textMuted: {
+    color: colors.textSecondary ?? "#a1a1aa",
+  },
+
+  addText: {
+    color: colors.textPrimary,
+    fontWeight: "700",
+  },
+});

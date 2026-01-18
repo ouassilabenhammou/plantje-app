@@ -2,6 +2,9 @@ import ChevronIcon from "@/assets/icons/chevron-icon.svg";
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 
+import { colors } from "@/theme/colors";
+import { typography } from "@/theme/typografie";
+
 type PlantenCardProps = {
   image?: string;
   name?: string;
@@ -25,7 +28,12 @@ const PlantenCard = ({ image, name, species }: PlantenCardProps) => {
         <Text style={styles.naam}>{name ?? "Onbekende plant"}</Text>
         <Text style={styles.latijn}>{species ?? "-"}</Text>
       </View>
-      <ChevronIcon style={styles.icon} />
+      <ChevronIcon
+        style={styles.icon}
+        width={20}
+        height={20}
+        color={colors.primaryGroen}
+      />
     </View>
   );
 };
@@ -35,7 +43,7 @@ export default PlantenCard;
 const styles = StyleSheet.create({
   plantcard: {
     width: "100%",
-    backgroundColor: "grey",
+    backgroundColor: colors.cardBg,
     borderRadius: 12,
     paddingLeft: 10,
     paddingRight: 20,
@@ -59,10 +67,12 @@ const styles = StyleSheet.create({
   },
 
   naam: {
-    fontSize: 16,
+    color: colors.textPrimary,
+    ...typography.cardTitel,
   },
 
   latijn: {
-    fontSize: 14,
+    ...typography.subText,
+    color: colors.textSecondary,
   },
 });
