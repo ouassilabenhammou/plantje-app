@@ -1,4 +1,4 @@
-# Plantje – Plantenverzorgingsapp
+# Persoonlijk Project - Plantje App
 
 Dit project is een plantenverzorgingsapp die gebruikers helpt om hun planten
 gezonder te houden.
