@@ -1,50 +1,102 @@
-# Welcome to your Expo app 👋
+# Plantje – Plantenverzorgingsapp
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Dit project is een plantenverzorgingsapp die gebruikers helpt om hun planten
+gezonder te houden.
 
-## Get started
+De app geeft inzicht in water- en lichtbehoefte en ondersteunt met taken en
+herinneringen. Veel gebruikers weten niet precies wanneer of hoeveel water een plant
+nodig heeft. Daarom ligt de focus op overzicht, basisadvies en het bijhouden van
+verzorging.
 
-1. Install dependencies
+## Tech stack
 
-   ```bash
-   npm install
-   ```
+![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Expo](https://img.shields.io/badge/Expo-000020?style=for-the-badge&logo=expo&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 
-2. Start the app
+- Perenual API (plantinformatie)
+- react-native-dotenv (veilig opslaan API-keys)
+- Supabase (gebruikersdata & "mijn planten")
 
-   ```bash
-   npx expo start
-   ```
+## Installatie
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### 1. Dependencies installeren
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. App starten
 
-## Learn more
+```bash
+npx expo start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+Scan de QR-code met **Expo Go**
+of start in een emulator.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Live link
 
-## Join the community
+🔗 [https://dulcet-sable-4aa0e8.netlify.app/login](https://dulcet-sable-4aa0e8.netlify.app/login)
 
-Join our community of developers creating universal apps.
+Deze link brengt je naar de online versie van de app.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Test account
+
+Gebruik onderstaande gegevens om de app te testen:
+
+**E-mail:** test@plantje.app  
+**Wachtwoord:** test123
+
+## Functionaliteiten
+
+- Planten toevoegen, bewerken en verwijderen
+- Taken tonen en afvinken
+- Dagelijkse taken automatisch genereren
+- Opslag van gebruikersdata via Supabase
+- Basisadvies over water en licht
+
+## Wat heb ik geleerd
+
+- Werken met externe API’s
+- Error handling
+- CRUD-functionaliteiten bouwen
+- Data koppelen aan Supabase
+- Structuur opzetten in React Native
+
+## Reflectie
+
+Tijdens dit project heb ik geleerd hoe belangrijk een goede planning is. Omdat ik
+later ben gestart, is het design nog niet volledig uitgewerkt.
+
+Technisch heb ik veel geleerd over:
+
+- Werken met API’s
+- Omgaan met errors
+- CRUD-functionaliteiten
+- Database koppelingen met Supabase
+- Projectstructuur binnen React Native
+
+Tijdens de ontwikkeling kreeg ik te maken met een **429 API error (Too Many
+Requests)**. Door statuscodes zichtbaar te maken ontdekte ik dat er te veel
+verzoeken tegelijk werden gedaan.
+
+Hiervoor heb ik:
+
+- Minder vaak data opgehaald
+- Pagination toegepast
+- Details pas geladen na klik
+- Caching gebruikt
+
+Hierdoor werd het API-gebruik efficiënter.
+
+In een volgend project wil ik eerder starten en aan het begin een concreter plan
+maken, zodat ik meer tijd heb voor UI en afronding.
+
+## Auteur
+
+Ouassila  
+Student ICT  
+Fontys Hogescholen  
+Semester 4
